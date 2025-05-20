@@ -1,10 +1,10 @@
-Question 1:
+/*Question 1:
 Level: Simple
 Topic: DISTINCT
 Task: Create a list of all the different (distinct) replacement costs of the films.
 --Question: What's the lowest replacement cost?
 
-Result_1
+Result_1*/
 select distinct replacement_cost as Cout_Remplacement 
 from film
 order by replacement_cost asc
@@ -12,14 +12,15 @@ order by replacement_cost asc
 select distinct min(replacement_cost) as Min_cost
 from film
 
-Question 2:
+/*Question 2:
 Level: Moderate
 Topic: CASE + GROUP BY
 Task: Write a query that gives an overview of how many films have replacements costs in the
 following cost ranges: low: 9.99 - 19.99, medium: 20.00 - 24.99, high: 25.00 - 29.99
 Question: How many films have a replacement cost in the 'low' group?
 
-Result_2
+Result_2*/
+
 select 	category,
 			count (*) as nber_films
 From (		
@@ -33,14 +34,15 @@ From (
 group by category
 order by nber_films desc
 
-Question 3:
+/*Question 3:
 Level: Moderate
 Topic: JOIN
 Task: Create a list of the film titles including their title, length, and category name ordered
 descendingly by length. Filter the results to only the movies in the category 'Drama' or 'Sports'.
 Question: In which category is the longest film and how long is it?
 
-Result_3
+Result_3*/
+
 select title, length, name
 from film
 full outer join category
@@ -48,13 +50,14 @@ on film.film_id = category.category_id
 --where name in ('Drama', 'Sports')
 order by length desc
 
-Question 4:
+/*Question 4:
 Level: Moderate
 Topic: JOIN & GROUP BY
 Task: Create an overview of how many movies (titles) there are in each category (name).
 Question: Which category (name) is the most common among the films?
 
-Result_4
+Result_4*/
+
 select 	name,
 		count(*)
 from (
@@ -66,14 +69,15 @@ from (
 	on film.film_id = category.category_id)
 group by name
 
-Question 5:
+/*Question 5:
 Level: Moderate
 Topic: JOIN & GROUP BY
 Task: Create an overview of the actors' first and last names and in how many movies they appear
 in.
 Question: Which actor is part of most movies?
 
-Result_5
+Result_5*/
+
 select first_name, last_name, count(*)
 from (
 select first_name, last_name, film_id
@@ -84,13 +88,14 @@ group by first_name, last_name
 order by count (*) desc
 
 
-Question 6:
+/*Question 6:
 Level: Moderate
 Topic: LEFT JOIN & FILTERING
 Task: Create an overview of the addresses that are not associated to any customer.
 Question: How many addresses are that?
 
-Result_6
+Result_6*/
+
 select count(*)
 from (
 select *
@@ -100,7 +105,7 @@ on address.address_id = customer.address_id
 where customer.customer_id is null)
 
 
-Question 7:
+/*Question 7:
 Level: Moderate
 Topic: JOIN & GROUP BY
 Task: Create the overview of the sales to determine from which city (we are interested in the city in
@@ -108,7 +113,8 @@ which the customer lives, not where the store is) most sales occur.
 Question: What city is that and how much is the amount?
 
 
-Result_7
+Result_7*/
+
 select city, sum(amount) as total_sales
 from (
 		select *
@@ -125,14 +131,15 @@ group by city
 order by total_sales desc
 Limit 1
 
-Question 8:
+/*Question 8:
 Topic: JOIN & GROUP BY
 Task: Create an overview of the revenue (sum of amount) grouped by a column in the format
 'country, city'.
 Question: Which country, city has the least sales?
 
 
-Result_8
+Result_8*/
+
 select city, sum(amount) as total_sales
 from (
 		select *
@@ -169,13 +176,14 @@ group by city, country
 order by total_sales desc
 limit 1
 
-Question 9:
+/*Question 9:
 Level: Difficult
 Topic: Uncorrelated subquery
 Task: Create a list with the average of the sales amount each staff_id has per customer.
 Question: Which staff_id makes on average more revenue per customer?
 
-Result_9
+Result_9*/
+
 Select staff_id, round(avg(amount), 2) as average_sale
 from (
 		select staff_id, amount
