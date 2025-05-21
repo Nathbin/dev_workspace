@@ -184,10 +184,41 @@ Question: Which staff_id makes on average more revenue per customer?
 
 Result_9*/
 
-Select staff_id, round(avg(amount), 2) as average_sale
+select staff_id, round(avg(sum_sale), 2) as average_sale
 from (
-		select staff_id, amount
-		from payment)
+		select staff_id, customer_id, sum (amount) as sum_sale
+		from payment
+		group by staff_id, customer_id) 
 group by staff_id
 order by average_sale desc
---limit 1
+limit 1
+
+
+/*Question 10:
+Level: Difficult to very difficult
+Topic: EXTRACT + Uncorrelated subquery
+Task: Create a query that shows average daily revenue of all Sundays.
+Question: What is the daily average revenue of all Sundays?
+
+Result_10*/
+
+Select sunday, round (avg(amount), 2)
+from (
+		Select amount, extract(ISODOW from payment_date) as sunday
+		from payment)
+where sunday = '7'
+group by sunday
+
+/*Question 11:
+Level: Difficult to very difficult
+Topic: Correlated subquery
+Task: Create a list of movies - with their length and their replacement cost - that are longer than the
+average length in each replacement cost group.
+Question: Which two movies are the shortest on that list and how long are they?
+
+Result_11*/
+Select film_id, title, length, replacement_cost
+from film
+where replacement_cost > (Select round (avg(replacement_cost), 2) from film)
+order by replacement_cost desc
+limit 2
