@@ -204,10 +204,11 @@ Result_10*/
 
 Select sunday, round (avg(amount), 2)
 from (
-		Select amount, extract(ISODOW from payment_date) as sunday
-		from payment)
-where sunday = '7'
+		Select extract(ISODOW from payment_date) as sunday, amount
+		from payment
+		where (select extract(ISODOW from payment_date) = 7))
 group by sunday
+
 
 /*Question 11:
 Level: Difficult to very difficult
@@ -222,3 +223,55 @@ from film
 where replacement_cost > (Select round (avg(replacement_cost), 2) from film)
 order by replacement_cost desc
 limit 2
+
+/*Question 13:
+Level: Very difficult
+Topic: Correlated query
+Task: Create a list that shows all payments including the payment_id, amount, and the film category
+(name) plus the total amount that was made in this category. Order the results ascendingly by the
+category (name) and as second order criterion by the payment_id ascendingly.
+Question: What is the total revenue of the category 'Action' and what is the lowest payment_id in that category
+
+result_13*/
+select sum (amount), name
+from (
+		select payment.payment_id, payment.amount, name
+		from payment
+		inner join rental
+		on payment.rental_id = rental.rental_id
+		inner join inventory
+		on rental.inventory_id = inventory.inventory_id
+		inner join film
+		on inventory.film_id = film.film_id
+		inner join film_category
+		on film.film_id = film_category.film_id
+		inner join category 
+		on film_category.category_id = category.category_id)
+group by name
+order by name asc, sum asc
+
+/*Question 14:
+Level: Very difficult
+Topic: Correlated query
+Task: Create a list that shows all payments including the payment_id, amount, and the film category
+(name) plus the total amount that was made in this category. Order the results ascendingly by the
+category (name) and as second order criterion by the payment_id ascendingly.
+Question: What is the total revenue of the category 'Action' and what is the lowest payment_id in that category
+
+result_14*/
+
+select sum (amount), title, name
+from (
+		select distinct payment.payment_id, payment.amount, title, name
+		from payment
+		inner join rental
+		on payment.rental_id = rental.rental_id
+		inner join inventory
+		on rental.inventory_id = inventory.inventory_id
+		inner join film
+		on inventory.film_id = film.film_id
+		inner join film_category
+		on film.film_id = film_category.film_id
+		inner join category 
+		on film_category.category_id = category.category_id)
+group by title, name
